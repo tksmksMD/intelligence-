@@ -10,7 +10,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 import time
 
-# Load and preprocess the data
+
 train = pd.read_csv("mnist_train.csv").values
 Y_train = train[:, 0]
 X_train = train[:, 1:]
@@ -23,7 +23,7 @@ X_train, X_test = X_train / 255.0, X_test / 255.0
 X_train = X_train.reshape(-1, 28, 28)
 X_test = X_test.reshape(-1, 28, 28)
 
-# Create the neural network model
+
 x = Input(shape=(28, 28))
 flatten_x = Flatten()(x)
 h1 = Dense(64, activation="relu")(flatten_x)
@@ -51,19 +51,19 @@ model.fit(
     validation_data=(X_test, Y_test),
 )
 
-# Create a tkinter window
+# Create a window
 root = tk.Tk()
 root.title("Digit Prediction")
 
-# Create a tkinter Canvas to embed matplotlib figure
+# Create Canvas to figure
 canvas = FigureCanvasTkAgg(plt.Figure(), master=root)
 canvas_widget = canvas.get_tk_widget()
 canvas_widget.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
-# Get the axes of the figure
+# Get the axes
 ax = canvas.figure.add_subplot(111)
 
-# Function to update the figure with the current digit
+
 def update_digit(image, label):
     ax.clear()
     ax.imshow(image, cmap="gray")
@@ -86,14 +86,14 @@ for i in range(len(X_test)):
     # Update the figure
     update_digit(image, predicted_label)
 
-    # Pause for a short duration to see the prediction
+    # Pause for a short duration
     root.update_idletasks()
     root.update()
 
-    # Pause for 4 seconds between each digit
+    # Pause for 1.5 seconds
     time.sleep(1.5)
 
-# Wait for user interaction before closing the tkinter window
+
 plt.ioff()
 plt.show()
 root.mainloop()
