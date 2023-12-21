@@ -14,7 +14,7 @@ def mutate(individual, mutation_probability):
     mutated_individual = list(individual)
     for i in range(len(mutated_individual)):
         if random.random() < mutation_probability:
-            # 
+            # вибір одного гена для мутації 
             mutated_individual[i] += random.uniform(-0.5, 0.5)
     return tuple(mutated_individual)
 
