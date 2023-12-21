@@ -14,20 +14,25 @@ def mutate(individual, mutation_probability):
     mutated_individual = list(individual)
     for i in range(len(mutated_individual)):
         if random.random() < mutation_probability:
+            # 
             mutated_individual[i] += random.uniform(-0.5, 0.5)
     return tuple(mutated_individual)
 
-def genetic_algorithm(population_size, generations, crossover_probability, mutation_probability):
+def tournament_selection(population, tournament_size):
+    # 
+    tournament = random.sample(population, tournament_size)
+    tournament.sort(key=lambda ind: eval_func(ind), reverse=True)
+    return tournament[0]
+
+def genetic_algorithm(population_size, generations, crossover_probability, mutation_probability, tournament_size):
     population = [(random.uniform(-10, 10), random.uniform(-10, 10), random.uniform(-10, 10)) for _ in range(population_size)]
 
     for generation in range(generations):
-        # Сортування популяції за фітнес-функцією
-        population.sort(key=lambda ind: eval_func(ind), reverse=True)
-
         new_population = []
         for i in range(0, population_size, 2):
-            # Вибір батьків для схрещування
-            parent1, parent2 = population[i], population[i + 1]
+            # Вибір батьків за допомогою турнірного відбору
+            parent1 = tournament_selection(population, tournament_size)
+            parent2 = tournament_selection(population, tournament_size)
 
             # Схрещення з певною ймовірністю
             if random.random() < crossover_probability:
@@ -36,7 +41,7 @@ def genetic_algorithm(population_size, generations, crossover_probability, mutat
             else:
                 new_population.extend([mutate(parent1, mutation_probability), mutate(parent2, mutation_probability)])
 
-        # По завершенні схрещення і мутацій, сортуємо нову популяцію
+        # Сортування нової популяції
         new_population.sort(key=lambda ind: eval_func(ind), reverse=True)
 
         # Відбір найкращих особин
@@ -51,9 +56,10 @@ population_size = 50
 generations = 100
 crossover_probability = 0.7
 mutation_probability = 0.1
+tournament_size = 5  #розмір турніру
 
 # Запуск генетичного алгоритму
-best_fitness, best_solution = genetic_algorithm(population_size, generations, crossover_probability, mutation_probability)
+best_fitness, best_solution = genetic_algorithm(population_size, generations, crossover_probability, mutation_probability, tournament_size)
 
 # Виведення результатів
 print(f"Best Fitness: {best_fitness[0]}")
