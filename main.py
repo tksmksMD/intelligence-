@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import MeanShift, KMeans
 from sklearn.metrics import silhouette_score
+from sklearn.cluster import estimate_bandwidth
 
 # Завантаження даних з файлу
 file_path = 'C:/Users/Саня/PycharmProjects/laba1/lab1.txt'
@@ -15,7 +16,8 @@ plt.xlabel('Ось X')
 plt.ylabel('Ось Y')
 
 # Метод зсуву середнього для визначення кількості кластерів
-meanshift = MeanShift()
+bandwidth = estimate_bandwidth(data, quantile=0.2)
+meanshift = MeanShift(bandwidth=bandwidth)
 meanshift.fit(data)
 num_clusters = len(np.unique(meanshift.labels_))
 
@@ -58,9 +60,8 @@ x_min, x_max = data[:, 0].min() - 1, data[:, 0].max() + 1
 y_min, y_max = data[:, 1].min() - 1, data[:, 1].max() + 1
 xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
 
-# Отримання міток для кожної точки на сітці
+# Отримання міток для кожної точки
 Z = kmeans.predict(np.c_[xx.ravel(), yy.ravel()])
-
 # Перетворення розмірності для відображення контурів
 Z = Z.reshape(xx.shape)
 
@@ -73,5 +74,4 @@ plt.title('Кластеризовані дані з границями клас�
 plt.xlabel('Ось X')
 plt.ylabel('Ось Y')
 plt.legend()
-
 plt.show()
